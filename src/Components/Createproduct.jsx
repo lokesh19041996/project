@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import axios from "axios"
+import { useNavigate } from "react-router-dom";
+
 
 const Createproduct = () => {
   const [productlist, setproductlist] = useState({
@@ -8,6 +10,8 @@ const Createproduct = () => {
     qty: "",
     price: ""
   });
+  const navigate = useNavigate();
+
 
   let handleChange = (e) => {
     let newproductlist = { ...productlist }
@@ -15,12 +19,27 @@ const Createproduct = () => {
     setproductlist(newproductlist)
   }
 
+  let changeImage=(event)=>{
+    let imageFile = event.target.files[0];
+    console.log(event);
+    let reader = new FileReader()
+    reader.readAsDataURL(imageFile)
+    reader.addEventListener("load", ()=>{
+      if(reader.result){
+        setproductlist({...productlist, image:reader.result})
+      }
+    })
+  }
+
   let addProducts = () => {
     axios.post("http://localhost:3000/projects1", productlist).then((res) => {
       console.log(res.data)
       clearForm()
+      navigate("/Admin")
     })
   }
+
+  
   let clearForm = () => {
     setproductlist({
       name: "",
@@ -39,7 +58,7 @@ const Createproduct = () => {
             <div className="card-body">
               <ul className='list-group'>
                 <input type="text" placeholder='Product Name' className='list-group-item' name="name" value={productlist.name} onChange={(e) => { handleChange(e) }} /><br />
-                <input type="text" placeholder='Image' className='list-group-item' name="image" value={productlist.image} onChange={(e) => { handleChange(e) }} /><br />
+                <input type="file" placeholder='Image' className='list-group-item' name="image" /* value={productlist.image}  */onChange={ changeImage} /><br />
                 <input type="number" placeholder='quantity' className='list-group-item' name="qty" value={productlist.qty} onChange={(e) => { handleChange(e) }} /><br />
                 <input type="number" placeholder='price' className='list-group-item' name="price" value={productlist.price} onChange={(e) => { handleChange(e) }} />
               </ul>

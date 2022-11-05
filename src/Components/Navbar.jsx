@@ -7,6 +7,7 @@ const Navbar = () => {
   return (
     <div>
       <BrowserRouter>
+      
         <nav className='navbar navbar-dark bg-dark navbar-expand-lg'>
           <Link to="/" className='navbar-brand'>React Routing Project</Link>
           <div className='mr-auto'>
